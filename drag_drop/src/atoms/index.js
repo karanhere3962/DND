@@ -1,0 +1,1 @@
+export { cardWithID } from "./cardAtoms";

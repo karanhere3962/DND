@@ -12,7 +12,6 @@ code {
     monospace;
 }
 
-html,
-body {
-  height: 100%;
+:root {
+  --sidebar-width: 10%;
 }

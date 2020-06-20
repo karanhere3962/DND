@@ -2,5 +2,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5px;
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.sideBar .card {
+  background-color: #f9f9f9;
+}
+
+.canvas .card {
+  background-color: #f9f9f9;
+  border: 1px dashed #ccc;
+}
+
+.dragging {
+  opacity: 0.75;
 }

@@ -6,13 +6,16 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import SideBar from "./components/SideBar/SideBar";
 import Canvas from "./components/Canvas/Canvas";
+import { RecoilRoot } from "recoil";
 
 function App() {
   return (
-    <DndProvider backend={HTML5Backend}>
-      <SideBar />
-      <Canvas />
-    </DndProvider>
+    <RecoilRoot>
+      <DndProvider backend={HTML5Backend}>
+        <SideBar />
+        <Canvas />
+      </DndProvider>
+    </RecoilRoot>
   );
 }
 

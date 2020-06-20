@@ -1,19 +1,19 @@
 import { atom } from "recoil";
 
 const DefaultState = {
-    dimensions : [],
-    placeholder : "Enter your content.",
-    content : "",
-    connectedFrom : "",
-    connectedTo : ""
+  dimensions: [],
+  placeholder: "Enter your content.",
+  content: "",
+  connectedFrom: "",
+  connectedTo: "",
+  position: [],
 };
 
-export const cardWithID = memoize((id, defaultState = {}) =>
+export const cardWithID = (id, defaultState) =>
   atom({
-    key: `item${id}`,
+    key: `${id}`,
     default: {
       ...DefaultState,
       ...defaultState,
     },
-  })
-);
+  });

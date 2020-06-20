@@ -2,20 +2,63 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
-  width: 100%;
+  padding: 0px;
+  width: max-content;
+  min-width: 250px;
   max-width: 300px;
   background-color: #f9f9f9;
   border: 1px dashed #ccc;
   text-align: center;
   min-height: 50px;
   height: max-content;
+  position: relative;
+  transition: 500ms all ease-in-out;
+
 }
 
 .card:hover {
-  border-color: #111;
+  border-color: rgb(84, 157, 253);
 }
 
 .cardDragging {
   opacity: 0;
 }
+
+.cardBody {
+  width: 100%;
+  border: none;
+  padding: 5px;
+  text-align: center;
+}
+
+.card:before {
+  position: absolute;
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+  background: rgb(84, 157, 253);
+  top: -6px;
+  left: 50%;
+  border: 2px solid #fff;
+  transform: translateX(-50%);
+  opacity: 0
+}
+.card:after {
+  position: absolute;
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+  background: rgb(84, 157, 253);
+  bottom: -6px;
+  left: 50%;
+  border: 2px solid #fff;
+  transform: translateX(-50%);
+  opacity: 0
+}
+
+.card:hover::before, .card:hover::after{
+  opacity: 1;
+} 
+

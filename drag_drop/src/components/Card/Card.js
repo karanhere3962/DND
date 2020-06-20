@@ -63,19 +63,20 @@ const Card = (props) => {
       onDoubleClick={onFocus}
       onBlur={onBlur}
       onClick={() => console.log("Single click")}
+      id={id}
+      ref={drag}
+      style={{
+        left: left,
+        top: top,
+        position: "absolute",
+      }}
+      className={
+        isDragging ? "card cardDragging form-control" : "card form-control"
+      }
     >
       <textarea
-        id={id}
+        className="cardBody"
         type="text"
-        ref={drag}
-        style={{
-          left: left,
-          top: top,
-          position: "absolute",
-        }}
-        className={
-          isDragging ? "card cardDragging form-control" : "card form-control"
-        }
         onChange={(event) => {
           updateCardState({
             ...cardState,

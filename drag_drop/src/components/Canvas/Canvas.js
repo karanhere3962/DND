@@ -5,24 +5,41 @@ import Card from "../Card/Card";
 import { randomStringGenerator } from "../../helperFunctions";
 import ItemTypes from "../../ItemTypes";
 import { useRecoilState } from "recoil";
+import { cardWithID } from "../../atoms";
 import { canvasComponents } from "../../atoms/canvasAtoms";
 
 const Canvas = (props) => {
-  const [componentsInCanvas, setComponents] = useRecoilState(canvasComponents);
-  const [{ isOver }, drop] = useDrop({
-    accept: ItemTypes.CARD,
+  const [canvasComponentHolder, updateCanvasComponent] = useRecoilState(
+    canvasComponents
+  );
+  const [extraProps, drop] = useDrop({
+    accept: [ItemTypes.CARD, ItemTypes.CARDCREATOR],
     drop: (item, monitor) => {
-      const { x, y } = monitor.getClientOffset();
-      console.log(x, y);
+      if (item.type === ItemTypes.CARDCREATOR) {
+        let id = "card_component_" + randomStringGenerator();
+        updateCanvasComponent({
+          components: [
+            ...canvasComponentHolder.components,
+            {
+              id: id,
+              atom: cardWithID(id, {
+                content: "Double Click to Edit Content",
+                position: monitor.getClientOffset(),
+              }),
+            },
+          ],
+        });
+      }
     },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-    }),
+    collect: (monitor) => ({}),
   });
-
+  console.log(canvasComponentHolder);
   return (
-    <div className="canvas" ref={drop}>
-      <div>{/* <Card id={"sideBarCard" + randomStringGenerator()} /> */}</div>
+    <div id="canvas" className="canvas" ref={drop}>
+      {canvasComponentHolder.components.map((data) => {
+        console.log(data);
+        return <Card {...data} />;
+      })}
     </div>
   );
 };

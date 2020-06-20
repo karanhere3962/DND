@@ -5,17 +5,17 @@
   padding: 10px;
   width: 100%;
   max-width: 300px;
-}
-
-.sideBar .card {
-  background-color: #f9f9f9;
-}
-
-.canvas .card {
   background-color: #f9f9f9;
   border: 1px dashed #ccc;
+  text-align: center;
+  min-height: 50px;
+  height: max-content;
 }
 
-.dragging {
-  opacity: 0.75;
+.card:hover {
+  border-color: #111;
+}
+
+.cardDragging {
+  opacity: 0;
 }

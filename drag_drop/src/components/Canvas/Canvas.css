@@ -4,4 +4,14 @@
   background-color: rgb(255, 255, 255);
   margin-left: var(--sidebar-width);
   padding: 10px;
+  overflow-x: hidden;
+  position: relative;
+  transition: 400ms background linear;
+}
+
+/* .componentOver {
+  background-color: rgb(233, 233, 233);
+} */
+.canvas:focus {
+  background-color: rgb(233, 233, 233);
 }

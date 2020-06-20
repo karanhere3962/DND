@@ -7,6 +7,7 @@ const DefaultState = {
   connectedFrom: "",
   connectedTo: "",
   position: [],
+  disabled: true,
 };
 
 export const cardWithID = (id, defaultState) =>

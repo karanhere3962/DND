@@ -13,8 +13,7 @@ const CanvasGenerator = (props) => {
     >
       <ArcherContainer>
         {props.components.map((data) => {
-          console.log(data);
-          return <Card {...data} />;
+          return <Card {...data} key={data.id + "key"} />;
         })}
       </ArcherContainer>
     </div>

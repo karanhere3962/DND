@@ -13,7 +13,7 @@ const Canvas = (props) => {
   const [canvasComponentHolder, updateCanvasComponent] = useRecoilState(
     canvasComponents
   );
-  const [extraProps, drop] = useDrop({
+  const [{}, drop] = useDrop({
     accept: [ItemTypes.CARD, ItemTypes.CARDCREATOR],
     drop: (item, monitor) => {
       if (item.type === ItemTypes.CARDCREATOR) {

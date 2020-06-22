@@ -4,7 +4,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { useDrag } from "react-dnd";
 import ItemTypes from "../../ItemTypes";
 import "./Card.css";
-import { ArcherContainer, ArcherElement } from "react-archer";
 import stateHolder from "../../stateHolder";
 import CardGenerator from "./CardGenerator";
 
@@ -12,11 +11,9 @@ const Card = (props) => {
   const targetRef = useRef();
   const id = props.id ? props.id : "card_component";
   const [cardState, updateCardState] = useRecoilState(props.atom);
-  //   const [conState, conStateUpdater] = useRecoilState(stateListener);
 
   stateHolder.addState(id, cardState);
   stateHolder.addUpdater(id, updateCardState);
-  //   stateHolder.addUpdater("conStateUpdater", conStateUpdater);
 
   const [{ isDragging }, drag] = useDrag({
     item: { type: ItemTypes.CARD, id: id },
@@ -35,12 +32,14 @@ const Card = (props) => {
       };
 
   let canvas = document.getElementById("canvas");
+
   let left = Math.max(
     cardState.position.x -
       canvas.getBoundingClientRect().x -
       boundingBox.width / 2,
     0
   );
+
   let top = Math.max(cardState.position.y - boundingBox.height / 2, 0);
 
   const onFocus = () => {
@@ -59,10 +58,10 @@ const Card = (props) => {
       disabled: true,
     });
   };
-  console.log("This is the active card : ", stateHolder.getActiveCard());
+
   let archerRelations,
     archerId = id + "archer";
-  console.log("This is connectedTo : ", cardState.connectedTo);
+
   if (cardState.connectedTo && !isDragging) {
     archerRelations = {
       targetId: cardState.connectedTo + "archer",
@@ -94,45 +93,13 @@ const Card = (props) => {
       stateHolder.setActiveCard(id);
     }
     event.stopPropagation();
+    updateCardState({
+      ...cardState,
+      dimensions: [boundingBox.width, boundingBox.height],
+    });
   };
+
   return (
-    // <ArcherContainer>
-    // <div
-    //   ref={drag}
-    //   onDoubleClick={onFocus}
-    //   onBlur={onBlur}
-    //   onClick={singleClickHandler}
-    //   id={id}
-    //   style={{
-    //     left: left,
-    //     top: top,
-    //     position: "absolute",
-    //   }}
-    //   className={
-    //     isDragging
-    //       ? "card cardDragging form-control cardSelected"
-    //       : "card form-control cardSelected"
-    //   }
-    // >
-    //   <ArcherElement
-    //     onClick={() => console.log("Arrow was clicked")}
-    //     id={archerId}
-    //     relations={[archerRelations]}
-    //   >
-    //     <textarea
-    //       className="cardBody"
-    //       type="text"
-    //       onChange={(event) => {
-    //         updateCardState({
-    //           ...cardState,
-    //           content: event.target.value,
-    //         });
-    //       }}
-    //       disabled={cardState.disabled ? "disabled" : ""}
-    //       value={cardState.content}
-    //     />
-    //   </ArcherElement>
-    // {/* </div> */}
     <CardGenerator
       mainId={id}
       textOnChange={(event) => {

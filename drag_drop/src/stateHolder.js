@@ -2,6 +2,7 @@ export class StateHolder {
   static states = {};
   static updater = {};
   static activeCard = "";
+  static currentlyDragging = {};
 
   addState(key, state) {
     StateHolder.states[key] = state;
@@ -29,6 +30,20 @@ export class StateHolder {
 
   getAllState() {
     return StateHolder.states;
+  }
+
+  addCurrentlyDragging(id) {
+    StateHolder.currentlyDragging[id] = true;
+  }
+
+  isCurrentlyDragging(id) {
+    return StateHolder.currentlyDragging[id];
+  }
+
+  removeCurrentlyDragging(id) {
+    if (StateHolder.currentlyDragging[id]) {
+      delete StateHolder.currentlyDragging[id];
+    }
   }
 }
 

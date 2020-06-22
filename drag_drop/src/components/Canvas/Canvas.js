@@ -7,6 +7,7 @@ import ItemTypes from "../../ItemTypes";
 import { useRecoilState } from "recoil";
 import { cardWithID } from "../../atoms";
 import { canvasComponents } from "../../atoms/canvasAtoms";
+import { ArcherContainer, ArcherElement } from "react-archer";
 
 const Canvas = (props) => {
   const [canvasComponentHolder, updateCanvasComponent] = useRecoilState(
@@ -36,10 +37,15 @@ const Canvas = (props) => {
   console.log(canvasComponentHolder);
   return (
     <div id="canvas" className="canvas" ref={drop}>
-      {canvasComponentHolder.components.map((data) => {
-        console.log(data);
-        return <Card {...data} />;
-      })}
+      <ArcherContainer>
+        {canvasComponentHolder.components.map((data) => {
+          console.log(data);
+          return <Card {...data} />;
+        })}
+        <ArcherElement id="root1">
+          <div className="card">Root</div>
+        </ArcherElement>
+      </ArcherContainer>
     </div>
   );
 };

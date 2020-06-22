@@ -7,6 +7,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import SideBar from "./components/SideBar/SideBar";
 import Canvas from "./components/Canvas/Canvas";
 import { RecoilRoot } from "recoil";
+import { ArcherContainer } from "react-archer";
 
 function App() {
   return (

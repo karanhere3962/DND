@@ -9,6 +9,16 @@
   transition: 400ms background linear;
 }
 
+.canvasOuter {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+.canvas svg {
+  height: 100vh !important;
+}
+
 /* .componentOver {
   background-color: rgb(233, 233, 233);
 } */

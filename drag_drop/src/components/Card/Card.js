@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { useDrag } from "react-dnd";
 import ItemTypes from "../../ItemTypes";
 import "./Card.css";
-import { randomStringGenerator } from "../../helperFunctions";
+import { ArcherElement } from "react-archer";
 
 const Card = (props) => {
   const targetRef = useRef();
@@ -60,11 +60,11 @@ const Card = (props) => {
   };
   return (
     <div
+      ref={drag}
       onDoubleClick={onFocus}
       onBlur={onBlur}
       onClick={() => console.log("Single click")}
       id={id}
-      ref={drag}
       style={{
         left: left,
         top: top,
@@ -74,18 +74,30 @@ const Card = (props) => {
         isDragging ? "card cardDragging form-control" : "card form-control"
       }
     >
-      <textarea
-        className="cardBody"
-        type="text"
-        onChange={(event) => {
-          updateCardState({
-            ...cardState,
-            content: event.target.value,
-          });
-        }}
-        disabled={cardState.disabled ? "disabled" : ""}
-        value={cardState.content}
-      />
+      <ArcherElement
+        id={id + "archer"}
+        relations={[
+          {
+            targetId: "root1",
+            targetAnchor: "top",
+            sourceAnchor: "bottom",
+            style: { strokeColor: "blue", strokeWidth: 1 },
+          },
+        ]}
+      >
+        <textarea
+          className="cardBody"
+          type="text"
+          onChange={(event) => {
+            updateCardState({
+              ...cardState,
+              content: event.target.value,
+            });
+          }}
+          disabled={cardState.disabled ? "disabled" : ""}
+          value={cardState.content}
+        />
+      </ArcherElement>
     </div>
   );
 };

@@ -12,8 +12,7 @@
   min-height: 50px;
   height: max-content;
   position: relative;
-  transition: 500ms all ease-in-out;
-
+  /* transition: 100ms all ease-in-out; */
 }
 
 .card:hover {
@@ -42,7 +41,7 @@
   left: 50%;
   border: 2px solid #fff;
   transform: translateX(-50%);
-  opacity: 0
+  opacity: 0;
 }
 .card:after {
   position: absolute;
@@ -55,10 +54,13 @@
   left: 50%;
   border: 2px solid #fff;
   transform: translateX(-50%);
-  opacity: 0
+  opacity: 0;
+}
+.canvas svg {
+  height: 100vh;
 }
 
-.card:hover::before, .card:hover::after{
+.card:hover::before,
+.card:hover::after {
   opacity: 1;
-} 
-
+}

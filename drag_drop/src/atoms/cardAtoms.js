@@ -18,3 +18,10 @@ export const cardWithID = (id, defaultState) =>
       ...defaultState,
     },
   });
+
+export const stateListener = atom({
+  key: "cardStateListener",
+  default: {
+    listening: "",
+  },
+});

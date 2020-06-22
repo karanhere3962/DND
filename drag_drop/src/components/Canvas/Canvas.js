@@ -8,6 +8,7 @@ import { useRecoilState } from "recoil";
 import { cardWithID } from "../../atoms";
 import { canvasComponents } from "../../atoms/canvasAtoms";
 import { ArcherContainer, ArcherElement } from "react-archer";
+import stateHolder from "../../stateHolder";
 
 const Canvas = (props) => {
   const [canvasComponentHolder, updateCanvasComponent] = useRecoilState(
@@ -30,21 +31,47 @@ const Canvas = (props) => {
             },
           ],
         });
+      } else {
+        let state = stateHolder.getState(item.id);
+        console.log("This is the card to be updated : ", state);
+        let updater = stateHolder.getUpdater(item.id);
+        console.log("This is the updater : ", updater);
+        updater({
+          ...state,
+          position: monitor.getClientOffset(),
+        });
       }
     },
+    // hover: (item, monitor) => {
+    //   let state = stateHolder.getState(item.id);
+    //   if (state) {
+    //     console.log("This is the card to be updated : ", state);
+    //     let updater = stateHolder.getUpdater(item.id);
+    //     console.log("This is the updater : ", updater);
+    //     updater({
+    //       ...state,
+    //       position: monitor.getClientOffset(),
+    //     });
+    //   }
+    // },
     collect: (monitor) => ({}),
   });
-  console.log(canvasComponentHolder);
+  console.log(stateHolder.getAllState());
   return (
-    <div id="canvas" className="canvas" ref={drop}>
+    <div
+      id="canvas"
+      className="canvas"
+      ref={drop}
+      onClick={() => {
+        console.log("Canvas onClick");
+        stateHolder.setActiveCard("");
+      }}
+    >
       <ArcherContainer>
         {canvasComponentHolder.components.map((data) => {
           console.log(data);
           return <Card {...data} />;
         })}
-        <ArcherElement id="root1">
-          <div className="card">Root</div>
-        </ArcherElement>
       </ArcherContainer>
     </div>
   );

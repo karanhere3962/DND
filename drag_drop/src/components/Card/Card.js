@@ -1,32 +1,30 @@
-import React, { useRef, useLayoutEffect, useEffect } from "react";
-import { cardWithID } from "../../atoms";
+import React, { useRef, useLayoutEffect, useEffect, useState } from "react";
+// import { stateListener } from "../../atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useDrag } from "react-dnd";
 import ItemTypes from "../../ItemTypes";
 import "./Card.css";
-import { ArcherElement } from "react-archer";
+import { ArcherContainer, ArcherElement } from "react-archer";
+import stateHolder from "../../stateHolder";
 
 const Card = (props) => {
   const targetRef = useRef();
   const id = props.id ? props.id : "card_component";
   const [cardState, updateCardState] = useRecoilState(props.atom);
+  //   const [conState, conStateUpdater] = useRecoilState(stateListener);
+
+  stateHolder.addState(id, cardState);
+  stateHolder.addUpdater(id, updateCardState);
+  //   stateHolder.addUpdater("conStateUpdater", conStateUpdater);
 
   const [{ isDragging }, drag] = useDrag({
     item: { type: ItemTypes.CARD, id: id },
-    begin: (monitor) => {},
-    end: (item, monitor) => {
-      updateCardState({
-        ...cardState,
-        position: {
-          x: window.event.clientX,
-          y: window.event.clientY,
-        },
-      });
-    },
+
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
+
   let self = document.getElementById(id);
   let boundingBox = self
     ? self.getBoundingClientRect()
@@ -34,6 +32,7 @@ const Card = (props) => {
         width: 0,
         height: 0,
       };
+
   let canvas = document.getElementById("canvas");
   let left = Math.max(
     cardState.position.x -
@@ -42,13 +41,14 @@ const Card = (props) => {
     0
   );
   let top = Math.max(cardState.position.y - boundingBox.height / 2, 0);
-  console.log("This is the card state : ", cardState);
+
   const onFocus = () => {
     console.log("Double Clicked");
     updateCardState({
       ...cardState,
       disabled: false,
     });
+    stateHolder.setActiveCard();
   };
 
   const onBlur = () => {
@@ -58,12 +58,34 @@ const Card = (props) => {
       disabled: true,
     });
   };
+  console.log("This is the active card : ", stateHolder.getActiveCard());
   return (
+    // <ArcherContainer>
     <div
       ref={drag}
       onDoubleClick={onFocus}
       onBlur={onBlur}
-      onClick={() => console.log("Single click")}
+      onClick={(event) => {
+        let activeCard = stateHolder.getActiveCard();
+        if (activeCard) {
+          console.log("Completing connection with ", activeCard, "from ", id);
+          let state = stateHolder.getState(activeCard);
+          let updater = stateHolder.getUpdater(activeCard);
+          updater({
+            ...state,
+            connectedTo: activeCard,
+          });
+          updateCardState({
+            ...cardState,
+            connectedFrom: activeCard,
+          });
+          stateHolder.setActiveCard("");
+        } else {
+          console.log("Setting active card : ", id);
+          stateHolder.setActiveCard(id);
+        }
+        event.stopPropagation();
+      }}
       id={id}
       style={{
         left: left,
@@ -71,19 +93,26 @@ const Card = (props) => {
         position: "absolute",
       }}
       className={
-        isDragging ? "card cardDragging form-control" : "card form-control"
+        isDragging
+          ? "card cardDragging form-control cardSelected"
+          : "card form-control cardSelected"
       }
     >
       <ArcherElement
+        onClick={() => console.log("Arrow was clicked")}
         id={id + "archer"}
-        relations={[
-          {
-            targetId: "root1",
-            targetAnchor: "top",
-            sourceAnchor: "bottom",
-            style: { strokeColor: "blue", strokeWidth: 1 },
-          },
-        ]}
+        relations={
+          cardState.connectedTo
+            ? [
+                {
+                  targetId: cardState.connectedTo + "archer",
+                  targetAnchor: "top",
+                  sourceAnchor: "bottom",
+                  style: { strokeColor: "blue", strokeWidth: 1 },
+                },
+              ]
+            : ""
+        }
       >
         <textarea
           className="cardBody"

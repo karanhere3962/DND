@@ -12,6 +12,7 @@
   min-height: 50px;
   height: max-content;
   position: relative;
+  z-index: 11;
   /* transition: 100ms all ease-in-out; */
 }
 
@@ -55,6 +56,32 @@
   border: 2px solid #fff;
   transform: translateX(-50%);
   opacity: 0;
+}
+.cardSelected:before {
+  position: absolute;
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+  background: rgb(84, 157, 253);
+  top: -6px;
+  left: 50%;
+  border: 2px solid #fff;
+  transform: translateX(-50%);
+  opacity: 1;
+}
+.cardSelected:after {
+  position: absolute;
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+  background: rgb(84, 157, 253);
+  bottom: -6px;
+  left: 50%;
+  border: 2px solid #fff;
+  transform: translateX(-50%);
+  opacity: 1;
 }
 .canvas svg {
   height: 100vh;

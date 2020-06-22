@@ -1,14 +1,13 @@
 import React from "react";
 import "./Canvas.css";
 import { useDrop } from "react-dnd";
-import Card from "../Card/Card";
 import { randomStringGenerator } from "../../helperFunctions";
 import ItemTypes from "../../ItemTypes";
 import { useRecoilState } from "recoil";
 import { cardWithID } from "../../atoms";
 import { canvasComponents } from "../../atoms/canvasAtoms";
-import { ArcherContainer, ArcherElement } from "react-archer";
 import stateHolder from "../../stateHolder";
+import CanvasGenerator from "./CanvasGenerator";
 
 const Canvas = (props) => {
   const [canvasComponentHolder, updateCanvasComponent] = useRecoilState(
@@ -40,6 +39,7 @@ const Canvas = (props) => {
           ...state,
           position: monitor.getClientOffset(),
         });
+        updateCanvasComponent(canvasComponentHolder);
       }
     },
     // hover: (item, monitor) => {
@@ -56,24 +56,17 @@ const Canvas = (props) => {
     // },
     collect: (monitor) => ({}),
   });
-  console.log(stateHolder.getAllState());
+
+  
   return (
-    <div
-      id="canvas"
-      className="canvas"
-      ref={drop}
-      onClick={() => {
+    <CanvasGenerator
+      componentRef={drop}
+      componentOnClick={() => {
         console.log("Canvas onClick");
         stateHolder.setActiveCard("");
       }}
-    >
-      <ArcherContainer>
-        {canvasComponentHolder.components.map((data) => {
-          console.log(data);
-          return <Card {...data} />;
-        })}
-      </ArcherContainer>
-    </div>
+      components={canvasComponentHolder.components}
+    />
   );
 };
 

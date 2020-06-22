@@ -59,6 +59,19 @@ const Card = (props) => {
     });
   };
   console.log("This is the active card : ", stateHolder.getActiveCard());
+  let archerRelations,
+    archerId = id + "archer";
+  console.log("This is connectedTo : ", cardState.connectedTo);
+  if (cardState.connectedTo && !isDragging) {
+    archerRelations = {
+      targetId: cardState.connectedTo + "archer",
+      targetAnchor: "top",
+      sourceAnchor: "bottom",
+      style: { strokeColor: "blue", strokeWidth: 1, noCurves: true },
+    };
+  } else {
+    archerRelations = {};
+  }
   return (
     // <ArcherContainer>
     <div
@@ -73,7 +86,7 @@ const Card = (props) => {
           let updater = stateHolder.getUpdater(activeCard);
           updater({
             ...state,
-            connectedTo: activeCard,
+            connectedTo: id,
           });
           updateCardState({
             ...cardState,
@@ -100,19 +113,8 @@ const Card = (props) => {
     >
       <ArcherElement
         onClick={() => console.log("Arrow was clicked")}
-        id={id + "archer"}
-        relations={
-          cardState.connectedTo
-            ? [
-                {
-                  targetId: cardState.connectedTo + "archer",
-                  targetAnchor: "top",
-                  sourceAnchor: "bottom",
-                  style: { strokeColor: "blue", strokeWidth: 1 },
-                },
-              ]
-            : ""
-        }
+        id={archerId}
+        relations={[archerRelations]}
       >
         <textarea
           className="cardBody"

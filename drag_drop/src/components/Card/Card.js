@@ -6,6 +6,7 @@ import ItemTypes from "../../ItemTypes";
 import "./Card.css";
 import { ArcherContainer, ArcherElement } from "react-archer";
 import stateHolder from "../../stateHolder";
+import CardGenerator from "./CardGenerator";
 
 const Card = (props) => {
   const targetRef = useRef();
@@ -72,64 +73,89 @@ const Card = (props) => {
   } else {
     archerRelations = {};
   }
+
+  const singleClickHandler = (event) => {
+    let activeCard = stateHolder.getActiveCard();
+    if (activeCard) {
+      console.log("Completing connection with ", activeCard, "from ", id);
+      let state = stateHolder.getState(activeCard);
+      let updater = stateHolder.getUpdater(activeCard);
+      updater({
+        ...state,
+        connectedTo: id,
+      });
+      updateCardState({
+        ...cardState,
+        connectedFrom: activeCard,
+      });
+      stateHolder.setActiveCard("");
+    } else {
+      console.log("Setting active card : ", id);
+      stateHolder.setActiveCard(id);
+    }
+    event.stopPropagation();
+  };
   return (
     // <ArcherContainer>
-    <div
-      ref={drag}
-      onDoubleClick={onFocus}
-      onBlur={onBlur}
-      onClick={(event) => {
-        let activeCard = stateHolder.getActiveCard();
-        if (activeCard) {
-          console.log("Completing connection with ", activeCard, "from ", id);
-          let state = stateHolder.getState(activeCard);
-          let updater = stateHolder.getUpdater(activeCard);
-          updater({
-            ...state,
-            connectedTo: id,
-          });
-          updateCardState({
-            ...cardState,
-            connectedFrom: activeCard,
-          });
-          stateHolder.setActiveCard("");
-        } else {
-          console.log("Setting active card : ", id);
-          stateHolder.setActiveCard(id);
-        }
-        event.stopPropagation();
+    // <div
+    //   ref={drag}
+    //   onDoubleClick={onFocus}
+    //   onBlur={onBlur}
+    //   onClick={singleClickHandler}
+    //   id={id}
+    //   style={{
+    //     left: left,
+    //     top: top,
+    //     position: "absolute",
+    //   }}
+    //   className={
+    //     isDragging
+    //       ? "card cardDragging form-control cardSelected"
+    //       : "card form-control cardSelected"
+    //   }
+    // >
+    //   <ArcherElement
+    //     onClick={() => console.log("Arrow was clicked")}
+    //     id={archerId}
+    //     relations={[archerRelations]}
+    //   >
+    //     <textarea
+    //       className="cardBody"
+    //       type="text"
+    //       onChange={(event) => {
+    //         updateCardState({
+    //           ...cardState,
+    //           content: event.target.value,
+    //         });
+    //       }}
+    //       disabled={cardState.disabled ? "disabled" : ""}
+    //       value={cardState.content}
+    //     />
+    //   </ArcherElement>
+    // {/* </div> */}
+    <CardGenerator
+      mainId={id}
+      textOnChange={(event) => {
+        updateCardState({
+          ...cardState,
+          content: event.target.value,
+        });
       }}
-      id={id}
-      style={{
+      textAreaDisabled={cardState.disabled ? "disabled" : ""}
+      archerRelations={[archerRelations]}
+      isDragging={isDragging}
+      dragRef={drag}
+      doubleClickHandler={onFocus}
+      blurHandler={onBlur}
+      singleClickHandler={singleClickHandler}
+      mainStyle={{
         left: left,
         top: top,
         position: "absolute",
       }}
-      className={
-        isDragging
-          ? "card cardDragging form-control cardSelected"
-          : "card form-control cardSelected"
-      }
-    >
-      <ArcherElement
-        onClick={() => console.log("Arrow was clicked")}
-        id={archerId}
-        relations={[archerRelations]}
-      >
-        <textarea
-          className="cardBody"
-          type="text"
-          onChange={(event) => {
-            updateCardState({
-              ...cardState,
-              content: event.target.value,
-            });
-          }}
-          disabled={cardState.disabled ? "disabled" : ""}
-          value={cardState.content}
-        />
-      </ArcherElement>
-    </div>
+      archerId={archerId}
+      textAreaValue={cardState.content}
+    />
   );
 };
 

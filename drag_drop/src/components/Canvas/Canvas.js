@@ -39,7 +39,6 @@ const Canvas = (props) => {
           ...state,
           position: monitor.getClientOffset(),
         });
-        updateCanvasComponent(canvasComponentHolder);
       }
     },
     // hover: (item, monitor) => {
@@ -57,12 +56,10 @@ const Canvas = (props) => {
     collect: (monitor) => ({}),
   });
 
-  
   return (
     <CanvasGenerator
       componentRef={drop}
       componentOnClick={() => {
-        console.log("Canvas onClick");
         stateHolder.setActiveCard("");
       }}
       components={canvasComponentHolder.components}

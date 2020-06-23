@@ -76,6 +76,11 @@ export class StateHolder {
     this.deleteState(id);
     this.deleteUpdater(id);
   }
+
+  returnComponentJson() {
+    let componentStates = {};
+    for
+  }
 }
 
 export default new StateHolder();

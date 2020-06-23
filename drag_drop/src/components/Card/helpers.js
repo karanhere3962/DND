@@ -22,14 +22,6 @@ export const cleanCard = (id) => {
     stateHolder.deleteStateAndUpdater(from);
   }
 
-  //   if (to) {
-  //     let toState = stateHolder.getState(to);
-  //     if (toState.connectedFrom !== id && toState.connectedFrom === "") {
-  //       updatedCard.connectedTo = "";
-  //       shouldBeUpdated = true;
-  //     }
-  //   }
-
   if (shouldBeUpdated) {
     console.log("Cleaning card :", id);
     stateHolder.getUpdater(id)(updatedCard);

@@ -20,7 +20,27 @@ const CardGenerator = (props) => {
       }
     >
       <div className="functionHolder">
-        <img src="/delete.png" onClick={() => {}} />
+        <img
+          src="/delete.png"
+          onClick={(event) => {
+            let state = stateHolder.getState("canvasComponentsHolder");
+            let updater = stateHolder.getUpdater("canvasComponentsHolder");
+            let updatedState = {};
+            let keys = Object.keys(state.components);
+            for (let i = 0; i < keys.length; i++) {
+              let element = state.components[keys[i]];
+              if (element.id !== props.mainId) {
+                updatedState[keys[i]] = element;
+              }
+            }
+            console.log("Deleting : ", updatedState[props.mainId]);
+            updater({
+              components: updatedState,
+            });
+            stateHolder.deleteStateAndUpdater(props.mainId);
+            event.stopPropagation();
+          }}
+        />
         <img
           src="/cancel.png"
           onClick={(event) => {

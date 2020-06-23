@@ -92,7 +92,6 @@ const Card = (props) => {
   ) {
     let targetId = cardState.connectedTo + "archer";
     const [source, target] = getSourceTargetAnchors(id, cardState.connectedTo);
-    console.log(source, target);
     archerRelations = {
       targetId: targetId,
       targetAnchor: target,
@@ -112,7 +111,6 @@ const Card = (props) => {
         stateHolder.setActiveCard("");
         return;
       }
-      console.log("Completing connection with ", activeCard, "from ", id);
       let state = stateHolder.getState(activeCard);
       let updater = stateHolder.getUpdater(activeCard);
       let activeCardTo = state.connectedTo;
@@ -146,11 +144,9 @@ const Card = (props) => {
           });
         }
       }
-      console.log("Updating from card for ", id, " with ", activeCard);
       updatedCard.connectedFrom = activeCard;
       stateHolder.setActiveCard("");
     } else {
-      console.log("Setting active card : ", id);
       stateHolder.setActiveCard(id);
     }
     event.stopPropagation();
@@ -160,7 +156,6 @@ const Card = (props) => {
     });
   };
 
-  console.log("This is the state : ", stateHolder.getAllState());
   return (
     <CardGenerator
       mainId={id}

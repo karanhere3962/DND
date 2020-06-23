@@ -33,7 +33,6 @@ const CardGenerator = (props) => {
                 updatedState[keys[i]] = element;
               }
             }
-            console.log("Deleting : ", updatedState[props.mainId]);
             updater({
               components: updatedState,
             });
@@ -67,11 +66,7 @@ const CardGenerator = (props) => {
           }}
         />
       </div>
-      <ArcherElement
-        onClick={() => console.log("Arrow was clicked")}
-        id={props.archerId}
-        relations={props.archerRelations}
-      >
+      <ArcherElement id={props.archerId} relations={props.archerRelations}>
         <textarea
           className="cardBody"
           type="text"

@@ -43,7 +43,6 @@ export class StateHolder {
   updateState(id, state) {
     let updater = this.getUpdater(id);
     let oldState = this.getState(id);
-    console.log("Trying to update state");
     if (updater) {
       updater({
         ...oldState,
@@ -78,8 +77,14 @@ export class StateHolder {
   }
 
   returnComponentJson() {
-    let componentStates = {};
-    for
+    let componentStates = {},
+      states = StateHolder.states;
+    Object.keys(states).map((data, index) => {
+      if (states[data].id && states[data].id.includes("card_component_")) {
+        componentStates[data] = states[data];
+      }
+    });
+    return componentStates;
   }
 }
 

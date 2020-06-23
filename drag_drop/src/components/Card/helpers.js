@@ -10,20 +10,17 @@ export const cleanCard = (id) => {
   Object.assign(updatedCard, card);
 
   if (to && !componentsHolder.components[to]) {
-    console.log("changing to");
     shouldBeUpdated = true;
     updatedCard.connectedTo = "";
     stateHolder.deleteStateAndUpdater(to);
   }
   if (from && !componentsHolder.components[from]) {
-    console.log("changing from");
     shouldBeUpdated = true;
     updatedCard.connectedFrom = "";
     stateHolder.deleteStateAndUpdater(from);
   }
 
   if (shouldBeUpdated) {
-    console.log("Cleaning card :", id);
     stateHolder.getUpdater(id)(updatedCard);
   }
 };
@@ -39,8 +36,6 @@ export const getSourceTargetAnchors = (sourceId, targetId) => {
   let x1 = targetCard.position.x;
   let y1 = targetCard.position.y;
 
-  console.log(x0, y0, x1, y1);
-
   let deltaX = x0 - x1;
   let deltaY = y0 - y1;
 
@@ -50,8 +45,6 @@ export const getSourceTargetAnchors = (sourceId, targetId) => {
     TOP: "top",
     BOTTOM: "bottom",
   };
-
-  console.log(deltaX, deltaY);
 
   if (deltaX < 0) {
     // source left
@@ -97,7 +90,6 @@ export const getSourceTargetAnchors = (sourceId, targetId) => {
       }
     }
   }
-  console.log("Returning source target : ", { sourceAnchor, targetAnchor });
   return [sourceAnchor, targetAnchor];
   //   return ["middle", "middle"];
 };

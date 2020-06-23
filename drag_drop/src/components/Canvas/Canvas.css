@@ -6,7 +6,7 @@
   /* padding: 10px; */
   overflow-x: hidden;
   position: relative;
-  transition: 400ms background linear;
+  /* transition: 400ms background linear; */
 }
 
 .canvasOuter {

@@ -40,10 +40,41 @@ export class StateHolder {
     return StateHolder.currentlyDragging[id];
   }
 
+  updateState(id, state) {
+    let updater = this.getUpdater(id);
+    let oldState = this.getState(id);
+    console.log("Trying to update state");
+    if (updater) {
+      updater({
+        ...oldState,
+        ...oldState,
+      });
+    } else {
+      this.addState(id, state);
+    }
+  }
+
   removeCurrentlyDragging(id) {
     if (StateHolder.currentlyDragging[id]) {
       delete StateHolder.currentlyDragging[id];
     }
+  }
+
+  deleteState(id) {
+    if (StateHolder.states[id]) {
+      delete StateHolder.states[id];
+    }
+  }
+
+  deleteUpdater(id) {
+    if (StateHolder.updater[id]) {
+      delete StateHolder.updater[id];
+    }
+  }
+
+  deleteStateAndUpdater(id) {
+    this.deleteState(id);
+    this.deleteUpdater(id);
   }
 }
 

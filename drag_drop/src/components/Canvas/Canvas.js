@@ -13,28 +13,30 @@ const Canvas = (props) => {
   const [canvasComponentHolder, updateCanvasComponent] = useRecoilState(
     canvasComponents
   );
+
+  stateHolder.addState("canvasComponentsHolder", canvasComponentHolder);
+  stateHolder.addUpdater("canvasComponentsHolder", updateCanvasComponent);
+
   const [{}, drop] = useDrop({
     accept: [ItemTypes.CARD, ItemTypes.CARDCREATOR],
     drop: (item, monitor) => {
       if (item.type === ItemTypes.CARDCREATOR) {
         let id = "card_component_" + randomStringGenerator();
         updateCanvasComponent({
-          components: [
+          components: {
             ...canvasComponentHolder.components,
-            {
+            [id]: {
               id: id,
               atom: cardWithID(id, {
                 content: "Double Click to Edit Content",
                 position: monitor.getClientOffset(),
               }),
             },
-          ],
+          },
         });
       } else {
         let state = stateHolder.getState(item.id);
-        console.log("This is the card to be updated : ", state);
         let updater = stateHolder.getUpdater(item.id);
-        console.log("This is the updater : ", updater);
         updater({
           ...state,
           position: monitor.getClientOffset(),

@@ -8,6 +8,7 @@ const DefaultState = {
   connectedTo: "",
   position: [],
   disabled: true,
+  isConnectedToDragging: false,
 };
 
 export const cardWithID = (id, defaultState) =>
@@ -16,6 +17,7 @@ export const cardWithID = (id, defaultState) =>
     default: {
       ...DefaultState,
       ...defaultState,
+      id: id,
     },
   });
 

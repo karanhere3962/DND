@@ -6,10 +6,14 @@ import ItemTypes from "../../ItemTypes";
 import "./Card.css";
 import stateHolder from "../../stateHolder";
 import CardGenerator from "./CardGenerator";
+import { cleanCard } from "./helpers";
 
 const Card = (props) => {
-  const targetRef = useRef();
   const id = props.id ? props.id : "card_component";
+  //   if (stateHolder.getState(id)) {
+  //     cleanCard(id);
+  //   }
+
   const [cardState, updateCardState] = useRecoilState(props.atom);
 
   stateHolder.addState(id, cardState);
@@ -17,7 +21,20 @@ const Card = (props) => {
 
   const [{ isDragging }, drag] = useDrag({
     item: { type: ItemTypes.CARD, id: id },
-
+    begin: (monitor) => {
+      if (cardState.connectedFrom) {
+        stateHolder.updateState(cardState.connectedFrom, {
+          isConnectedToDragging: true,
+        });
+      }
+    },
+    end: (item, monitor) => {
+      if (cardState.connectedFrom) {
+        stateHolder.updateState(cardState.connectedFrom, {
+          isConnectedToDragging: false,
+        });
+      }
+    },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -62,7 +79,11 @@ const Card = (props) => {
   let archerRelations,
     archerId = id + "archer";
 
-  if (cardState.connectedTo && !isDragging) {
+  if (
+    cardState.connectedTo &&
+    !isDragging &&
+    !cardState.isConnectedToDragging
+  ) {
     archerRelations = {
       targetId: cardState.connectedTo + "archer",
       targetAnchor: "top",
@@ -75,18 +96,27 @@ const Card = (props) => {
 
   const singleClickHandler = (event) => {
     let activeCard = stateHolder.getActiveCard();
+    let updatedCard = {};
+    Object.assign(updatedCard, cardState);
     if (activeCard) {
       console.log("Completing connection with ", activeCard, "from ", id);
       let state = stateHolder.getState(activeCard);
       let updater = stateHolder.getUpdater(activeCard);
+      let activeCardTo = state.connectedTo;
       updater({
         ...state,
         connectedTo: id,
       });
-      updateCardState({
-        ...cardState,
-        connectedFrom: activeCard,
-      });
+      if (activeCardTo) {
+        state = stateHolder.getState(activeCardTo);
+        updater = stateHolder.getUpdater(activeCardTo);
+        updater({
+          ...state,
+          connectedFrom: "",
+        });
+      }
+      console.log("Updating from card for ", id, " with ", activeCard);
+      updatedCard.connectedFrom = activeCard;
       stateHolder.setActiveCard("");
     } else {
       console.log("Setting active card : ", id);
@@ -94,11 +124,12 @@ const Card = (props) => {
     }
     event.stopPropagation();
     updateCardState({
-      ...cardState,
+      ...updatedCard,
       dimensions: [boundingBox.width, boundingBox.height],
     });
   };
 
+  console.log("This is the state : ", stateHolder.getAllState());
   return (
     <CardGenerator
       mainId={id}

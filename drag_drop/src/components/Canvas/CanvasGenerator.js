@@ -12,7 +12,8 @@ const CanvasGenerator = (props) => {
       onClick={props.componentOnClick}
     >
       <ArcherContainer>
-        {props.components.map((data) => {
+        {Object.keys(props.components).map((key) => {
+          let data = props.components[key];
           return <Card {...data} key={data.id + "key"} />;
         })}
       </ArcherContainer>

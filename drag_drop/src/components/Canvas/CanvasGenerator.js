@@ -4,6 +4,7 @@ import { ArcherContainer, ArcherElement } from "react-archer";
 import "./Canvas.css";
 
 const CanvasGenerator = (props) => {
+  
   return (
     <div
       id="canvas"

@@ -6,13 +6,13 @@ import ItemTypes from "../../ItemTypes";
 import "./Card.css";
 import stateHolder from "../../stateHolder";
 import CardGenerator from "./CardGenerator";
-import { cleanCard } from "./helpers";
+import { cleanCard, getSourceTargetAnchors } from "./helpers";
 
 const Card = (props) => {
   const id = props.id ? props.id : "card_component";
-  //   if (stateHolder.getState(id)) {
-  //     cleanCard(id);
-  //   }
+  if (stateHolder.getState(id)) {
+    cleanCard(id);
+  }
 
   const [cardState, updateCardState] = useRecoilState(props.atom);
 
@@ -23,14 +23,20 @@ const Card = (props) => {
     item: { type: ItemTypes.CARD, id: id },
     begin: (monitor) => {
       if (cardState.connectedFrom) {
-        stateHolder.updateState(cardState.connectedFrom, {
+        let state = stateHolder.getState(cardState.connectedFrom);
+        let updater = stateHolder.getUpdater(cardState.connectedFrom);
+        updater({
+          ...state,
           isConnectedToDragging: true,
         });
       }
     },
     end: (item, monitor) => {
       if (cardState.connectedFrom) {
-        stateHolder.updateState(cardState.connectedFrom, {
+        let state = stateHolder.getState(cardState.connectedFrom);
+        let updater = stateHolder.getUpdater(cardState.connectedFrom);
+        updater({
+          ...state,
           isConnectedToDragging: false,
         });
       }
@@ -60,7 +66,7 @@ const Card = (props) => {
   let top = Math.max(cardState.position.y - boundingBox.height / 2, 0);
 
   const onFocus = () => {
-    console.log("Double Clicked");
+    stateHolder.setActiveCard("");
     updateCardState({
       ...cardState,
       disabled: false,
@@ -69,7 +75,7 @@ const Card = (props) => {
   };
 
   const onBlur = () => {
-    console.log("On Blur");
+    stateHolder.setActiveCard("");
     updateCardState({
       ...cardState,
       disabled: true,
@@ -84,11 +90,14 @@ const Card = (props) => {
     !isDragging &&
     !cardState.isConnectedToDragging
   ) {
+    let targetId = cardState.connectedTo + "archer";
+    const [source, target] = getSourceTargetAnchors(id, cardState.connectedTo);
+    console.log(source, target);
     archerRelations = {
-      targetId: cardState.connectedTo + "archer",
-      targetAnchor: "top",
-      sourceAnchor: "bottom",
-      style: { strokeColor: "blue", strokeWidth: 1, noCurves: true },
+      targetId: targetId,
+      targetAnchor: target,
+      sourceAnchor: source,
+      style: { strokeColor: "blue", strokeWidth: 1, noCurves: false },
     };
   } else {
     archerRelations = {};
@@ -99,6 +108,10 @@ const Card = (props) => {
     let updatedCard = {};
     Object.assign(updatedCard, cardState);
     if (activeCard) {
+      if (activeCard === id) {
+        stateHolder.setActiveCard("");
+        return;
+      }
       console.log("Completing connection with ", activeCard, "from ", id);
       let state = stateHolder.getState(activeCard);
       let updater = stateHolder.getUpdater(activeCard);
@@ -107,13 +120,31 @@ const Card = (props) => {
         ...state,
         connectedTo: id,
       });
-      if (activeCardTo) {
+      if (activeCardTo && activeCardTo === cardState.connectedFrom) {
         state = stateHolder.getState(activeCardTo);
         updater = stateHolder.getUpdater(activeCardTo);
         updater({
           ...state,
           connectedFrom: "",
+          connectedTo: "",
         });
+      } else {
+        if (activeCardTo) {
+          state = stateHolder.getState(activeCardTo);
+          updater = stateHolder.getUpdater(activeCardTo);
+          updater({
+            ...state,
+            connectedFrom: "",
+          });
+        }
+        if (cardState.connectedFrom) {
+          state = stateHolder.getState(cardState.connectedFrom);
+          updater = stateHolder.getUpdater(cardState.connectedFrom);
+          updater({
+            ...state,
+            connectedTo: "",
+          });
+        }
       }
       console.log("Updating from card for ", id, " with ", activeCard);
       updatedCard.connectedFrom = activeCard;

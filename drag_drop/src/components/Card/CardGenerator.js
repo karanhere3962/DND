@@ -1,10 +1,7 @@
 import React from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { useDrag } from "react-dnd";
-import ItemTypes from "../../ItemTypes";
 import "./Card.css";
-import { ArcherContainer, ArcherElement } from "react-archer";
-import stateHolder from "../../stateHolder";
+import { ArcherElement } from "react-archer";
+import stateHolder, { StateHolder } from "../../stateHolder";
 import "./Card.css";
 
 const CardGenerator = (props) => {
@@ -22,6 +19,34 @@ const CardGenerator = (props) => {
           : "card form-control cardSelected"
       }
     >
+      <div className="functionHolder">
+        <img src="/delete.png" onClick={() => {}} />
+        <img
+          src="/cancel.png"
+          onClick={(event) => {
+            let state = stateHolder.getState(props.mainId);
+            let updater = stateHolder.getUpdater(props.mainId);
+
+            if (state.connectedTo) {
+              let toState = stateHolder.getState(state.connectedTo);
+              let toUpdater = stateHolder.getUpdater(state.connectedTo);
+              toUpdater({
+                ...toState,
+                connectedFrom: "",
+              });
+              updater({
+                ...state,
+                connectedTo: "",
+              });
+              stateHolder.addState(state.id, {
+                ...state,
+                connectedTo: "",
+              });
+            }
+            event.stopPropagation();
+          }}
+        />
+      </div>
       <ArcherElement
         onClick={() => console.log("Arrow was clicked")}
         id={props.archerId}

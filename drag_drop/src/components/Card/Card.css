@@ -91,3 +91,21 @@
 .card:hover::after {
   opacity: 1;
 }
+
+.functionHolder {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  width: 50%;
+}
+
+.functionHolder img {
+  width: 14px;
+  transition: transform 0.25s;
+  will-change: transform;
+}
+
+.functionHolder img:hover {
+  box-shadow: 0 4px 32px 0 rgb(144, 252, 252);
+  transform: scale(1.11);
+}
